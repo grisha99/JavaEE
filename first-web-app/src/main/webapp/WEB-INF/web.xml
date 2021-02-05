@@ -15,4 +15,15 @@
         <servlet-name>FirstServlet</servlet-name>
         <url-pattern>/first-servlet</url-pattern>
     </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404</location>
+    </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/403</location>
+    </error-page>
+
 </web-app>
