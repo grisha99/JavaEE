@@ -37,8 +37,8 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <c:url value="/products/add" var="productAddUrl"/>
-            <a class="btn btn-primary" href="${productAddUrl}">Add Product</a>
+            <c:url value="/users/add" var="userAddUrl"/>
+            <a class="btn btn-primary" href="${userAddUrl}">Add User</a>
         </div>
 
         <div class="col-12">
@@ -46,41 +46,41 @@
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">Email</th>
+
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="product" items="${requestScope.products}">
+                <c:forEach var="user" items="${requestScope.users}">
                     <%--                <% for (Product product : (List<Product>) request.getAttribute("products")) { %>--%>
                     <tr>
                         <th scope="row">
-                            <c:out value="${product.id}"/>
+                            <c:out value="${user.id}"/>
                                 <%--                        <%= product.getId() %>--%>
                         </th>
                         <td>
-                            <c:out value="${product.name}"/>
+                            <c:out value="${user.alias}"/>
                                 <%--                        <%= product.getName() %>--%>
                         </td>
                         <td>
-                            <c:out value="${product.description}"/>
+                            <c:out value="${user.username}"/>
                                 <%--                        <%= product.getDescription() %>--%>
                         </td>
-                        <td>$
-                            <c:out value="${product.price}"/>
+                        <td>
+                            <c:out value="${user.email}"/>
                                 <%--                        <%= product.getPrice() %>--%>
                         </td>
                         <td>
-                            <c:url value="/products/edit" var="productEditUrl">
-                                <c:param name="id" value="${product.id}"/>
+                            <c:url value="/users/edit" var="userEditUrl">
+                                <c:param name="id" value="${user.id}"/>
                             </c:url>
-                            <c:url value="/products/delete" var="productDelUrl">
-                                <c:param name="id" value="${product.id}"/>
+                            <c:url value="/users/delete" var="userDelUrl">
+                                <c:param name="id" value="${user.id}"/>
                             </c:url>
-                            <a class="btn btn-success" href="${productEditUrl}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="${productDelUrl}"><i class="far fa-trash-alt"></i></a>
+                            <a class="btn btn-success" href="${userEditUrl}"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="${userDelUrl}"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
                     <%--                <% } %>--%>

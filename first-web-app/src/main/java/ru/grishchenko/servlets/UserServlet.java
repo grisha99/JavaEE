@@ -2,8 +2,8 @@ package ru.grishchenko.servlets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.grishchenko.entity.Product;
-import ru.grishchenko.repositories.ProductRepository;
+import ru.grishchenko.entity.User;
+import ru.grishchenko.repositories.UserRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,20 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 
-@WebServlet(urlPatterns = "/products/*")
-public class ProductServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/users/*")
+public class UserServlet extends HttpServlet {
 
-    private ProductRepository productRepository;
-    private static final Logger logger = LoggerFactory.getLogger(ProductServlet.class);
+    private UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
 
     @Override
     public void init() throws ServletException {
-        this.productRepository = (ProductRepository) getServletContext().getAttribute("productRepository");
+        this.userRepository = (UserRepository) getServletContext().getAttribute("userRepository");
 
-        if (productRepository == null) {
-            throw new ServletException("Error get productRepository from context");
+        if (userRepository == null) {
+            throw new ServletException("Error get userRepository from context");
         }
     }
 
@@ -35,8 +34,8 @@ public class ProductServlet extends HttpServlet {
 //        getServletContext().getRequestDispatcher("/navigation").include(req, resp);
 
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
-            req.setAttribute("products", productRepository.findAll());
-            getServletContext().getRequestDispatcher("/WEB-INF/products.jsp").forward(req, resp);
+            req.setAttribute("users", userRepository.findAll());
+            getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/edit")) {
             long id;
             try {
@@ -47,18 +46,18 @@ public class ProductServlet extends HttpServlet {
                 logger.info(ex.getMessage());
                 return;
             }
-            Product product = (Product) productRepository.findById(id);
-            if (product == null) {
+            User user = userRepository.findById(id);
+            if (user == null) {
 //                resp.setStatus(404);
                 resp.sendError(404);
                 return;
             }
-            req.setAttribute("product", product);
-            getServletContext().getRequestDispatcher("/WEB-INF/product_edit_form.jsp").forward(req, resp);
+            req.setAttribute("user", user);
+            getServletContext().getRequestDispatcher("/WEB-INF/user_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/add")) {
-            Product product = new Product();
-            req.setAttribute("product", product);
-            getServletContext().getRequestDispatcher("/WEB-INF/product_edit_form.jsp").forward(req, resp);
+            User user = new User();
+            req.setAttribute("user", user);
+            getServletContext().getRequestDispatcher("/WEB-INF/user_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/delete")) {
             long id;
             try {
@@ -69,15 +68,15 @@ public class ProductServlet extends HttpServlet {
                 logger.info(ex.getMessage());
                 return;
             }
-            productRepository.deleteById(id);
-            resp.sendRedirect(getServletContext().getContextPath() + "/products");
+            userRepository.deleteById(id);
+            resp.sendRedirect(getServletContext().getContextPath() + "/users");
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id;
-        if (req.getParameter("id").equals("")) {    // новый продукт, id еще нет
+        if (req.getParameter("id").equals("")) {    // новый пользователь, id еще нет
             id = null;
         } else {
             try {
@@ -89,17 +88,8 @@ public class ProductServlet extends HttpServlet {
                 return;
             }
         }
-        BigDecimal price;
-        try {
-            price = new BigDecimal(req.getParameter("price"));
-        } catch (NumberFormatException ex) {
-//            resp.setStatus(400);
-            resp.sendError(400);
-            logger.info(ex.getMessage());
-            return;
-        }
-        Product product = new Product(id, req.getParameter("name"), req.getParameter("description"), price);
-        productRepository.saveOrUpdate(product);
-        resp.sendRedirect(getServletContext().getContextPath() + "/products");
+        User user = new User(id, req.getParameter("alias"), req.getParameter("username"), req.getParameter("password"), req.getParameter("email"));
+        userRepository.saveOrUpdate(user);
+        resp.sendRedirect(getServletContext().getContextPath() + "/users");
     }
 }

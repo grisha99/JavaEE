@@ -2,8 +2,8 @@ package ru.grishchenko.servlets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.grishchenko.entity.Product;
-import ru.grishchenko.repositories.ProductRepository;
+import ru.grishchenko.entity.Category;
+import ru.grishchenko.repositories.CategoryRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,18 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@WebServlet(urlPatterns = "/products/*")
-public class ProductServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/categories/*")
+public class CategoryServlet extends HttpServlet {
 
-    private ProductRepository productRepository;
-    private static final Logger logger = LoggerFactory.getLogger(ProductServlet.class);
+    private CategoryRepository categoryRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServlet.class);
 
     @Override
     public void init() throws ServletException {
-        this.productRepository = (ProductRepository) getServletContext().getAttribute("productRepository");
+        this.categoryRepository = (CategoryRepository) getServletContext().getAttribute("categoryRepository");
 
-        if (productRepository == null) {
-            throw new ServletException("Error get productRepository from context");
+        if (categoryRepository == null) {
+            throw new ServletException("Error get categoryRepository from context");
         }
     }
 
@@ -35,8 +35,8 @@ public class ProductServlet extends HttpServlet {
 //        getServletContext().getRequestDispatcher("/navigation").include(req, resp);
 
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
-            req.setAttribute("products", productRepository.findAll());
-            getServletContext().getRequestDispatcher("/WEB-INF/products.jsp").forward(req, resp);
+            req.setAttribute("categories", categoryRepository.findAll());
+            getServletContext().getRequestDispatcher("/WEB-INF/categories.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/edit")) {
             long id;
             try {
@@ -47,18 +47,18 @@ public class ProductServlet extends HttpServlet {
                 logger.info(ex.getMessage());
                 return;
             }
-            Product product = (Product) productRepository.findById(id);
-            if (product == null) {
+            Category category = categoryRepository.findById(id);
+            if (category == null) {
 //                resp.setStatus(404);
                 resp.sendError(404);
                 return;
             }
-            req.setAttribute("product", product);
-            getServletContext().getRequestDispatcher("/WEB-INF/product_edit_form.jsp").forward(req, resp);
+            req.setAttribute("category", category);
+            getServletContext().getRequestDispatcher("/WEB-INF/category_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/add")) {
-            Product product = new Product();
-            req.setAttribute("product", product);
-            getServletContext().getRequestDispatcher("/WEB-INF/product_edit_form.jsp").forward(req, resp);
+            Category category = new Category();
+            req.setAttribute("category", category);
+            getServletContext().getRequestDispatcher("/WEB-INF/category_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/delete")) {
             long id;
             try {
@@ -69,8 +69,8 @@ public class ProductServlet extends HttpServlet {
                 logger.info(ex.getMessage());
                 return;
             }
-            productRepository.deleteById(id);
-            resp.sendRedirect(getServletContext().getContextPath() + "/products");
+            categoryRepository.deleteById(id);
+            resp.sendRedirect(getServletContext().getContextPath() + "/categories");
         }
     }
 
@@ -89,17 +89,8 @@ public class ProductServlet extends HttpServlet {
                 return;
             }
         }
-        BigDecimal price;
-        try {
-            price = new BigDecimal(req.getParameter("price"));
-        } catch (NumberFormatException ex) {
-//            resp.setStatus(400);
-            resp.sendError(400);
-            logger.info(ex.getMessage());
-            return;
-        }
-        Product product = new Product(id, req.getParameter("name"), req.getParameter("description"), price);
-        productRepository.saveOrUpdate(product);
-        resp.sendRedirect(getServletContext().getContextPath() + "/products");
+        Category category = new Category(id, req.getParameter("title"), req.getParameter("description"));
+        categoryRepository.saveOrUpdate(category);
+        resp.sendRedirect(getServletContext().getContextPath() + "/categories");
     }
 }
