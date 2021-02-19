@@ -37,8 +37,8 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <c:url value="/products/add" var="productAddUrl"/>
-            <a class="btn btn-primary" href="${productAddUrl}">Add Product</a>
+            <c:url value="/categories/add" var="categoryAddUrl"/>
+            <a class="btn btn-primary" href="${categoryAddUrl}">Add Product</a>
         </div>
 
         <div class="col-12">
@@ -46,41 +46,41 @@
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Name</th>
+<%--                    <th scope="col">ParentId</th>--%>
+                    <th scope="col">Title</th>
                     <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Actions</th>
+
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="product" items="${requestScope.products}">
+                <c:forEach var="category" items="${requestScope.categories}">
                     <%--                <% for (Product product : (List<Product>) request.getAttribute("products")) { %>--%>
                     <tr>
                         <th scope="row">
-                            <c:out value="${product.id}"/>
+                            <c:out value="${category.id}"/>
                                 <%--                        <%= product.getId() %>--%>
                         </th>
+<%--                        <td>--%>
+<%--                            <c:out value="${category.parentCategoryId}"/>--%>
+<%--                                &lt;%&ndash;                        <%= product.getName() %>&ndash;%&gt;--%>
+<%--                        </td>--%>
                         <td>
-                            <c:out value="${product.name}"/>
-                                <%--                        <%= product.getName() %>--%>
-                        </td>
-                        <td>
-                            <c:out value="${product.description}"/>
+                            <c:out value="${category.title}"/>
                                 <%--                        <%= product.getDescription() %>--%>
                         </td>
-                        <td>$
-                            <c:out value="${product.price}"/>
+                        <td>
+                            <c:out value="${category.description}"/>
                                 <%--                        <%= product.getPrice() %>--%>
                         </td>
                         <td>
-                            <c:url value="/products/edit" var="productEditUrl">
-                                <c:param name="id" value="${product.id}"/>
+                            <c:url value="/categories/edit" var="categoryEditUrl">
+                                <c:param name="id" value="${category.id}"/>
                             </c:url>
-                            <c:url value="/products/delete" var="productDelUrl">
-                                <c:param name="id" value="${product.id}"/>
+                            <c:url value="/categories/delete" var="categoryDelUrl">
+                                <c:param name="id" value="${category.id}"/>
                             </c:url>
-                            <a class="btn btn-success" href="${productEditUrl}"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger" href="${productDelUrl}"><i class="far fa-trash-alt"></i></a>
+                            <a class="btn btn-success" href="${categoryEditUrl}"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="${categoryDelUrl}"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
                     <%--                <% } %>--%>
