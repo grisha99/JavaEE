@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:include src="header.xhtml"/>
+<h:body>
+    <div class="container">
+        <ui:include src="navigation.xhtml"/>
+        <div class="row py-2">
+            <h:form id="productForm">
+                <div class="col-12">
+                    <h:commandButton value="Add Category" styleClass="btn btn-primary"
+                                     action="#{categoryController.createCategory}"/>
+                </div>
+
+                <div class="col-12">
+                    <h:dataTable value="#{categoryController.categorise}" var="category"
+                                 styleClass="table table-bordered my-2">
+                        <h:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{category.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Title</f:facet>
+                            #{category.title}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Description</f:facet>
+                            #{category.description}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+
+                            <h:commandButton value="Edit" styleClass="btn btn-success"
+                                             action="#{categoryController.editCategory(category)}"/>
+                            <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             action="#{categoryController.deleteCategory(category)}">
+                                <f:ajax event="click" render="productForm"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+
+                </div>
+
+            </h:form>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous" type="javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous" type="javascript"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous" type="javascript"></script>
+
+</h:body>
+</html>
