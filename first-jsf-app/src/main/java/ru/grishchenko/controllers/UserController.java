@@ -4,6 +4,7 @@ import ru.grishchenko.entity.User;
 import ru.grishchenko.repositories.UserRepository;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
@@ -17,6 +18,12 @@ public class UserController {
 
     private User user;
 
+    private List<User> users;
+
+    public void preloadData(ComponentSystemEvent componentSystemEvent) {
+        users = userRepository.findAll();
+    }
+
     public User getUser() {
         return user;
     }
@@ -26,17 +33,17 @@ public class UserController {
     }
 
     public List<User> getUsers() {
-        return userRepository.findAll();
+        return users;
     }
 
     public String createUser() {
         this.user = new User();
-        return "/user_edit_form.xhtml?faces-redirect-true";
+        return "/user_edit_form.xhtml?faces-redirect=true";
     }
 
     public String editUser(User user) {
         this.user = user;
-        return "/user_edit_form.xhtml?faces-redirect-true";
+        return "/user_edit_form.xhtml?faces-redirect=true";
     }
 
     public void deleteUser(User user) {
@@ -45,6 +52,6 @@ public class UserController {
 
     public String saveUser() {
         userRepository.saveOrUpdate(user);
-        return "/users.xhtml?faces-redirect-true";
+        return "/users.xhtml?faces-redirect=true";
     }
 }

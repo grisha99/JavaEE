@@ -4,6 +4,9 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <ui:include src="header.xhtml"/>
 <h:body>
+
+    <f:event listener="#{userController.preloadData}" type="preRenderView"></f:event>
+
     <div class="container">
         <ui:include src="navigation.xhtml"/>
         <div class="row py-2">

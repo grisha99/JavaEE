@@ -4,6 +4,7 @@ import ru.grishchenko.entity.Product;
 import ru.grishchenko.repositories.ProductRepository;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -18,6 +19,12 @@ public class ProductController implements Serializable {
 
     private Product product;
 
+    private List<Product> products;
+
+    public void preloadData(ComponentSystemEvent componentSystemEvent) {
+        products = productRepository.findAll();
+    }
+
     public Product getProduct() {
         return product;
     }
@@ -28,16 +35,16 @@ public class ProductController implements Serializable {
 
     public String createProduct() {
         this.product = new Product();
-        return "/product_edit_form.xhtml?faces-redirect-true";
+        return "/product_edit_form.xhtml?faces-redirect=true";
     }
 
     public List<Product> getProducts() {
-        return productRepository.findAll();
+        return products;
     }
 
     public String editProduct(Product product) {
         this.product = product;
-        return "/product_edit_form.xhtml?faces-redirect-true";
+        return "/product_edit_form.xhtml?faces-redirect=true";
     }
 
     public void deleteProduct(Product product) {
@@ -46,7 +53,7 @@ public class ProductController implements Serializable {
 
     public String saveProduct() {
         productRepository.saveOrUpdate(product);
-        return "/products.xhtml?faces-redirect-true";
+        return "/products.xhtml?faces-redirect=true";
     }
 
 }
