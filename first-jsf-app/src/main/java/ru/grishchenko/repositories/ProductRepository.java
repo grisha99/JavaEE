@@ -1,47 +1,76 @@
 package ru.grishchenko.repositories;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.grishchenko.entity.Product;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Named
 @ApplicationScoped
 public class ProductRepository {
 
-    private final Map<Long, Product> productMap = new ConcurrentHashMap<Long, Product>();
+    private final static Logger logger = LoggerFactory.getLogger(ProductRepository.class);
 
-    private final AtomicLong identity = new AtomicLong(0);
+    @Inject
+    private CategoryRepository categoryRepository;
 
-    public ProductRepository() {
-        saveOrUpdate(new Product(null, "Молоко", "Молоко 3.2%", new BigDecimal(82.50)));
-        saveOrUpdate(new Product(null, "Хлеб", "Батон нарезной", new BigDecimal(32.00)));
-        saveOrUpdate(new Product(null, "Соль", "Соль пищевая", new BigDecimal(22.30)));
+    @PersistenceContext(unitName = "ds")
+    private EntityManager entityManager;
+
+    @Resource
+    private UserTransaction userTransaction;
+
+    @PostConstruct
+    public void init() throws SystemException {
+
+        if (getProductsCount() == 0) {
+            try {
+                userTransaction.begin();
+
+                saveOrUpdate(new Product(null, "Молоко", "Молоко 3.2%", new BigDecimal(82.50), categoryRepository.findById(1L)));
+                saveOrUpdate(new Product(null, "Хлеб", "Батон нарезной", new BigDecimal(32.00), categoryRepository.findById(1L)));
+                saveOrUpdate(new Product(null, "Соль", "Соль пищевая", new BigDecimal(22.30), categoryRepository.findById(1L)));
+
+                userTransaction.commit();
+            } catch (Exception e) {
+                logger.error("", e);
+                userTransaction.rollback();
+            }
+        }
     }
 
     public List<Product> findAll() {
-        return new ArrayList<Product>(productMap.values());
+        return entityManager.createNamedQuery("Product.findAll", Product.class).getResultList();
+    }
+
+    public Long getProductsCount() {
+        return entityManager.createNamedQuery("getProductsCount", Long.class).getSingleResult();
     }
 
     public Product findById(Long id) {
-        return productMap.get(id);
+        return entityManager.find(Product.class, id);
     }
 
+    @Transactional
     public void saveOrUpdate(Product product) {
         if (product.getId() == null) {
-            Long id = identity.incrementAndGet();
-            product.setId(id);
+            entityManager.persist(product);
         }
-        productMap.put(product.getId(), product);
+        entityManager.merge(product);
     }
 
+    @Transactional
     public void deleteById(Long id) {
-        productMap.remove(id);
+        entityManager.createNamedQuery("Product.deleteById").setParameter("id", id).executeUpdate();
     }
 }

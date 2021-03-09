@@ -1,11 +1,33 @@
 package ru.grishchenko.entity;
 
+import org.hibernate.annotations.GeneratorType;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
+@NamedQueries({
+        @NamedQuery(name = "User.findAll", query = "from User"),
+        @NamedQuery(name = "getUsersCount", query = "select count(*) from User"),
+        @NamedQuery(name = "User.deleteById", query = "delete from User u where u.id = :id")
+})
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "alias")
     private String alias;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "email")
     private String email;
 
     public User() {
