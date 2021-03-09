@@ -1,8 +1,9 @@
 package ru.grishchenko.entity;
 
+import dto.ProductDto;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -39,6 +40,10 @@ public class Product {
         this.description = description;
         this.price = price;
         this.category = category;
+    }
+
+    public Product(ProductDto productDto, Category category) {
+        this(productDto.getId(), productDto.getName(), productDto.getDescription(), productDto.getPrice(), category);
     }
 
     public Long getId() {

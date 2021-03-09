@@ -1,58 +1,58 @@
 package ru.grishchenko.controllers;
 
+import dto.CategoryDto;
 import ru.grishchenko.entity.Category;
-import ru.grishchenko.repositories.CategoryRepository;
+import ru.grishchenko.services.CategoryService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.event.ComponentSystemEvent;
-import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.Serializable;
 import java.util.List;
 
 @Named
 @ApplicationScoped
 public class CategoryController {
 
-    @Inject
-    private CategoryRepository categoryRepository;
+    @EJB
+    private CategoryService categoryService;
 
-    private Category category;
+    private CategoryDto categoryDto;
 
-    private List<Category> categories;
+    private List<CategoryDto> categories;
 
     public void preloadData(ComponentSystemEvent componentSystemEvent) {
-        categories = categoryRepository.findAll();
+        categories = categoryService.findAll();
     }
 
-    public Category getCategory() {
-        return category;
+    public CategoryDto getCategoryDto() {
+        return categoryDto;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryDto(CategoryDto categoryDto) {
+        this.categoryDto = categoryDto;
     }
 
-    public List<Category> getCategories() {
+    public List<CategoryDto> getCategories() {
         return categories;
     }
 
     public String createCategory() {
-        this.category = new Category();
+        this.categoryDto = new CategoryDto();
         return "/category_edit_form.xhtml?faces-redirect=true";
     }
 
-    public String editCategory(Category category) {
-        this.category = category;
+    public String editCategory(CategoryDto categoryDto) {
+        this.categoryDto = categoryDto;
         return "/category_edit_form.xhtml?faces-redirect=true";
     }
 
     public void deleteCategory(Category category) {
-        categoryRepository.deleteById(category.getId());
+        categoryService.deleteById(category.getId());
     }
 
     public String saveCategory() {
-        categoryRepository.saveOrUpdate(category);
+        categoryService.saveOrUpdate(categoryDto);
         return "/categories.xhtml?faces-redirect=true";
     }
 }

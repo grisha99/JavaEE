@@ -13,28 +13,32 @@
                     <div class="form-group">
                         <label>Name</label>
                         <h:inputText styleClass="form-control" id="name"
-                                     value="#{productController.product.name}"
+                                     value="#{productController.productDto.name}"
                                      placeholder="Enter name"/>
                     </div>
                     <div class="form-group">
                         <label>Description</label>
                         <h:inputText styleClass="form-control" id="description"
-                                     value="#{productController.product.description}"
+                                     value="#{productController.productDto.description}"
                                      placeholder="Enter description"/>
                     </div>
                     <div class="form-group">
                         <label>Price</label>
                         <h:inputText p:type="number" styleClass="form-control" id="price"
-                                     value="#{productController.product.price}"
+                                     value="#{productController.productDto.price}"
                                      placeholder="Enter price"/>
                     </div>
                     <div class="form-group">
-                        <label for="catSelect" class="form-label">Category</label>
-                        <h:selectOneMenu value="#{productController.product.category.id}" id="catSelect" styleClass="form-select">
-                            <f:selectItems value="#{categoryController.categories}" var="cat"
-                                           itemValue="#{cat.id}" itemLabel="#{cat.title}"/>
+                        <label for="productCategory" class="form-label">Category</label>
 
-                        </h:selectOneMenu>
+                        <h:selectOneListbox size="1" styleClass="form-control" id="productCategory"
+                                            value="#{productController.productDto.categoryId}">
+                            <f:selectItems value="#{productController.categories}"
+                                           var="cat"
+                                           itemValue="#{cat.id}"
+                                           itemLabel="#{cat.title}"
+                                           itemLabelEscaped="true"/>
+                        </h:selectOneListbox>
                     </div>
                     <h:commandButton value="Submit" styleClass="btn btn-primary"
                                      action="#{productController.saveProduct()}"/>
