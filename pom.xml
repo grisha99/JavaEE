@@ -10,9 +10,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>first-web-app</module>
+        <module>globalClasses</module>
         <module>first-jsf-app</module>
         <module>remote-client</module>
-        <module>globalClasses</module>
     </modules>
 
     <properties>

@@ -5,6 +5,7 @@ import dto.ProductDto;
 import ru.grishchenko.entity.Category;
 import ru.grishchenko.entity.Product;
 import ru.grishchenko.repositories.ProductRepository;
+import ru.grishchenko.rest.ProductServiceRest;
 import services.ProductServiceRemote;
 
 import javax.ejb.EJB;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
-public class ProductServiceImpl implements ProductService, ProductServiceRemote {
+public class ProductServiceImpl implements ProductService, ProductServiceRemote, ProductServiceRest {
 
     @EJB
     private ProductRepository productRepository;
@@ -58,6 +59,22 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote 
                             product.getCategory().getDescription()));
         }
         return null;
+    }
+
+    @Override
+    public void insert(ProductDto productDto) {
+        if (productDto.getId() != null) {
+            throw new IllegalArgumentException();
+        }
+        saveOrUpdate(productDto);
+    }
+
+    @Override
+    public void update(ProductDto productDto) {
+        if (productDto.getId() == null) {
+            throw new IllegalArgumentException();
+        }
+        saveOrUpdate(productDto);
     }
 
     @Override
