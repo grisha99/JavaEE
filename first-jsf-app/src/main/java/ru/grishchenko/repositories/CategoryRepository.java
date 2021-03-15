@@ -6,6 +6,7 @@ import ru.grishchenko.entity.Category;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -15,8 +16,7 @@ import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import java.util.List;
 
-@Named
-@ApplicationScoped
+@Stateless
 public class CategoryRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(CategoryRepository.class);
@@ -24,27 +24,27 @@ public class CategoryRepository {
     @PersistenceContext(unitName = "ds")
     private EntityManager entityManager;
 
-    @Resource
-    private UserTransaction userTransaction;
-
-    @PostConstruct
-    public void init() throws SystemException {
-        if (getCategoryCount() == 0) {
-            try {
-                userTransaction.begin();
-
-                saveOrUpdate(new Category(null, "Продукты", "Продукты питания"));
-                saveOrUpdate(new Category(null, "Бытовая техника", "Техника для дома"));
-                saveOrUpdate(new Category(null, "Мебель", "Спальни, прихожые и тд..."));
-
-                userTransaction.commit();
-            } catch (Exception e) {
-                logger.error("", e);
-                userTransaction.rollback();
-            }
-
-        }
-    }
+//    @Resource
+//    private UserTransaction userTransaction;
+//
+//    @PostConstruct
+//    public void init() throws SystemException {
+//        if (getCategoryCount() == 0) {
+//            try {
+//                userTransaction.begin();
+//
+//                saveOrUpdate(new Category(null, "Продукты", "Продукты питания"));
+//                saveOrUpdate(new Category(null, "Бытовая техника", "Техника для дома"));
+//                saveOrUpdate(new Category(null, "Мебель", "Спальни, прихожые и тд..."));
+//
+//                userTransaction.commit();
+//            } catch (Exception e) {
+//                logger.error("", e);
+//                userTransaction.rollback();
+//            }
+//
+//        }
+//    }
 
     public List<Category> findAll() {
         return entityManager.createNamedQuery("Category.findAll", Category.class).getResultList();
@@ -54,11 +54,15 @@ public class CategoryRepository {
         return entityManager.find(Category.class, id);
     }
 
+    public Category getReference(Long id) {
+        return entityManager.getReference(Category.class, id);
+    }
+
     public Long getCategoryCount() {
         return entityManager.createNamedQuery("getCategoryCount", Long.class).getSingleResult();
     }
 
-    @Transactional
+//    @Transactional
     public void saveOrUpdate(Category category) {
         if (category.getId() == null) {
             entityManager.persist(category);
@@ -66,7 +70,7 @@ public class CategoryRepository {
         entityManager.merge(category);
     }
 
-    @Transactional
+//    @Transactional
     public void deleteById(Long id) {
         entityManager.createNamedQuery("Category.deleteById", Category.class)
                 .setParameter("id", id)

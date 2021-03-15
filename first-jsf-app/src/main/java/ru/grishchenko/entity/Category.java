@@ -1,6 +1,7 @@
 package ru.grishchenko.entity;
 
 import org.hibernate.annotations.Cascade;
+import dto.CategoryDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Category {
     private String title;
 
     @Column(name = "description")
-    private String Description;
+    private String description;
 
     @OneToMany(mappedBy = "category")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -35,7 +36,15 @@ public class Category {
     public Category(Long id, String title, String description) {
         this.id = id;
         this.title = title;
-        Description = description;
+        this.description = description;
+    }
+
+    public Category(CategoryDto categoryDto) {
+        if (categoryDto != null) {
+            this.id = categoryDto.getId();
+            this.title = categoryDto.getTitle();
+            this.description = categoryDto.getDescription();
+        }
     }
 
     public Long getId() {
@@ -55,11 +64,11 @@ public class Category {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        description = description;
     }
 
     public List<Product> getProductList() {
