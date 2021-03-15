@@ -10,8 +10,11 @@ import java.math.BigDecimal;
 @NamedQueries({
         @NamedQuery(name = "Product.findAll", query = "from Product"),
         @NamedQuery(name = "getProductsCount", query = "select count(*) from Product"),
-        @NamedQuery(name = "Product.deleteById", query = "delete from Product p where p.id = :id")
+        @NamedQuery(name = "Product.deleteById", query = "delete from Product p where p.id = :id"),
+        @NamedQuery(name = "getProductsByName", query = "from Product p where p.name like :name"),
+        @NamedQuery(name = "getProductsByCategoryId", query = "from Product p where p.category.id = :id")
 })
+
 public class Product {
 
     @Id
@@ -28,7 +31,7 @@ public class Product {
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+//    @JoinColumn(name = "category_id")
     private Category category;
 
     public Product() {

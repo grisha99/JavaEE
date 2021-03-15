@@ -59,8 +59,8 @@ public class ProductController implements Serializable {
         return "/product_edit_form.xhtml?faces-redirect=true";
     }
 
-    public void deleteProduct(Product product) {
-        productService.deleteById(product.getId());
+    public void deleteProduct(ProductDto productDto) {
+        productService.deleteById(productDto.getId());
     }
 
     public String saveProduct() {

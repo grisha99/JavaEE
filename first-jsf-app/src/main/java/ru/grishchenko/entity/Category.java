@@ -27,7 +27,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Product> productList;
 
     public Category() {

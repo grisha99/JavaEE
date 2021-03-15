@@ -47,8 +47,8 @@ public class CategoryController {
         return "/category_edit_form.xhtml?faces-redirect=true";
     }
 
-    public void deleteCategory(Category category) {
-        categoryService.deleteById(category.getId());
+    public void deleteCategory(CategoryDto categoryDto) {
+        categoryService.deleteById(categoryDto.getId());
     }
 
     public String saveCategory() {

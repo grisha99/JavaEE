@@ -3,6 +3,7 @@ package ru.grishchenko.services;
 import dto.CategoryDto;
 import ru.grishchenko.entity.Category;
 import ru.grishchenko.repositories.CategoryRepository;
+import ru.grishchenko.rest.CategoryServiceRest;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService, CategoryServiceRest {
 
     @EJB
     private CategoryRepository categoryRepository;
@@ -48,6 +49,22 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Long getCategoryCount() {
         return categoryRepository.getCategoryCount();
+    }
+
+    @Override
+    public void insert(CategoryDto categoryDto) {
+        if (categoryDto.getId() != null) {
+            throw new IllegalArgumentException();
+        }
+        saveOrUpdate(categoryDto);
+    }
+
+    @Override
+    public void update(CategoryDto categoryDto) {
+        if (categoryDto.getId() == null) {
+            throw new IllegalArgumentException();
+        }
+        saveOrUpdate(categoryDto);
     }
 
     @Override
