@@ -1,17 +1,21 @@
 package ru.grishchenko.entity;
 
-import org.hibernate.annotations.GeneratorType;
+import ru.grishchenko.dto.UserDto;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @NamedQueries({
         @NamedQuery(name = "User.findAll", query = "from User"),
         @NamedQuery(name = "getUsersCount", query = "select count(*) from User"),
-        @NamedQuery(name = "User.deleteById", query = "delete from User u where u.id = :id")
+        @NamedQuery(name = "User.deleteById", query = "delete from User u where u.id = :id"),
+        @NamedQuery(name = "User.getByName", query = "from User u where u.username = :username")
 })
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +25,21 @@ public class User {
     @Column(name = "alias")
     private String alias;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
+
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public User() {
     }
@@ -39,6 +50,17 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+    }
+
+    public User(UserDto userDto) {
+        this.id = userDto.getId();
+        this.alias = userDto.getAlias();
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
+        this.email = userDto.getEmail();
+        this.roles = new HashSet<>();
+        userDto.getRoles().forEach(r -> roles.add(new Role(r)));
+//        this.roles.addAll(userDto.getRoles());
     }
 
     public Long getId() {
@@ -79,5 +101,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

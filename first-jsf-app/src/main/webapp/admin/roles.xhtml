@@ -1,51 +1,46 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<ui:include src="header.xhtml"/>
+<ui:include src="/header.xhtml"/>
 <h:body>
+
+    <f:event listener="#{roleController.preloadData}" type="preRenderView"></f:event>
+
     <div class="container">
         <ui:include src="/navigation.xhtml">
-            <ui:param name="pageName" value="Cart"/>
+            <ui:param name="pageName" value="Role"/>
         </ui:include>
         <div class="row py-2">
-            <h:form id="cartForm">
+            <h:form id="userForm">
+
+
                 <div class="col-12">
-                    <h:commandButton value="Clear Cart" styleClass="btn btn-danger"
-                                     action="#{cartController.clearCart}">
-                        <f:ajax event="click" render="cartForm"/>
-                    </h:commandButton>
-                </div>
-                <div class="col-12">
-                    <h:dataTable value="#{cartController.items.entrySet()}" var="item"
+                    <h:dataTable value="#{roleController.roles}" var="role"
                                  styleClass="table table-bordered my-2">
                         <h:column>
-                            <f:facet name="header">ID</f:facet>
-                            #{item.key.id}
+                            <f:facet name="header">Id</f:facet>
+                            #{role.id}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Продукт</f:facet>
-                            #{item.key.name}
+                            <f:facet name="header">Alias</f:facet>
+                            #{role.name}
                         </h:column>
-                        <h:column>
-                            <f:facet name="header">Количество</f:facet>
-                            #{item.value}
-                        </h:column>
+<!--                        <h:column>-->
+<!--                            <f:facet name="header">Actions</f:facet>-->
 
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
-                            <h:commandButton value="Delete" styleClass="btn btn-danger"
-                                             action="#{cartController.removeFromCart(item.key)}">
-                                <f:ajax event="click" render="cartForm"/>
-                            </h:commandButton>
-                        </h:column>
+<!--                            <h:commandButton value="Edit" styleClass="btn btn-success"-->
+<!--                                             action="#{userController.editUser(userWeb)}"/>-->
+<!--                            <h:commandButton value="Delete" styleClass="btn btn-danger"-->
+<!--                                             action="#{userController.deleteUser(userWeb)}">-->
+<!--                                <f:ajax event="click" render="userForm"/>-->
+<!--                            </h:commandButton>-->
+<!--                        </h:column>-->
                     </h:dataTable>
 
                 </div>
 
             </h:form>
-
         </div>
     </div>
 

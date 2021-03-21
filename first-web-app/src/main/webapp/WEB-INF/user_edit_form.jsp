@@ -39,22 +39,22 @@
         <div class="col-12">
             <c:url value="/users" var="userSubmitUrl"/>
             <form action="${userSubmitUrl}" method="post">
-                <input type="hidden" id="id" name="id" value="${user.id}">
+                <input type="hidden" id="id" name="id" value="${userWeb.id}">
                 <div class="form-group">
                     <label>Alias</label>
-                    <input type="text" class="form-control" id="alias" name="alias" value="${user.alias}" placeholder="Enter Alias">
+                    <input type="text" class="form-control" id="alias" name="alias" value="${userWeb.alias}" placeholder="Enter Alias">
                 </div>
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="${user.username}" placeholder="Enter username">
+                    <input type="text" class="form-control" id="username" name="username" value="${userWeb.username}" placeholder="Enter username">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" class="form-control" id="password" name="password" value="${user.password}" placeholder="Enter password">
+                    <input type="password" class="form-control" id="password" name="password" value="${userWeb.password}" placeholder="Enter password">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="text" class="form-control" id="email" name="email" value="${user.email}" placeholder="Enter email">
+                    <input type="text" class="form-control" id="email" name="email" value="${userWeb.email}" placeholder="Enter email">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

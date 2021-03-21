@@ -9,7 +9,9 @@ import ru.grishchenko.services.ProductService;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ComponentSystemEvent;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class ProductController implements Serializable {
 
     @EJB
     private CategoryService categoryService;
+
+    @Inject
+    private HttpSession httpSession;
 
     private ProductDto productDto;
 
@@ -74,5 +79,10 @@ public class ProductController implements Serializable {
 
     public void setCategories(List<CategoryDto> categories) {
         this.categories = categories;
+    }
+
+    public String logout() {
+        httpSession.invalidate();
+        return "/products.xhtml?faces-redirect=true";
     }
 }

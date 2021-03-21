@@ -3,7 +3,7 @@
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<ui:include src="header.xhtml"/>
+<ui:include src="/header.xhtml"/>
 <h:body>
     <div class="container">
         <div class="row py-2">
@@ -34,6 +34,15 @@
                                      value="#{userController.user.password}"
                                      placeholder="Enter password"/>
                     </div>
+                    <div class="form-group">
+                        <h:selectManyCheckbox value="#{userController.user.roles}" layout="pageDirection">
+                             <f:selectItems value="#{roleController.roles}"
+                                           var="role"
+                                           itemLabel="#{role.name}"
+                                           />
+                        </h:selectManyCheckbox>
+                    </div>
+
 
                     <h:commandButton value="Submit" styleClass="btn btn-primary"
                                      action="#{userController.saveUser}"/>

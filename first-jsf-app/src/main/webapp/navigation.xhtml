@@ -2,8 +2,39 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <a href="products.xhtml">Продукты</a>
-    <a href="categories.xhtml">Категории</a>
-    <a href="users.xhtml">Пользователи</a>
-    <a href="cart.xhtml">Корзина</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item #{pageName == 'Product' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Продукты" outcome="/products"/>
+                </li>
+                <li class="nav-item #{pageName == 'Category' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Категории" outcome="/categories"/>
+                </li>
+                <ui:fragment rendered="#{userController.isAdmin(request.userPrincipal.name)}">
+                    <li class="nav-item #{pageName == 'User' ? 'active' : ''}">
+                        <h:link styleClass="nav-link" value="Пользователи" outcome="/admin/users"/>
+                    </li>
+                </ui:fragment>
+                <ui:fragment rendered="#{userController.isAdmin(request.userPrincipal.name)}">
+                    <li class="nav-item #{pageName == 'Role' ? 'active' : ''}">
+                        <h:link styleClass="nav-link" value="Роли" outcome="/admin/roles"/>
+                    </li>
+                </ui:fragment>
+                <li class="nav-item #{pageName == 'Cart' ? 'active' : ''}">
+                    <h:link styleClass="nav-link" value="Корзина" outcome="/cart"/>
+                </li>
+                <li class="nav-item">
+                    <h:form rendered="#{request.userPrincipal != null}">
+                        <h:commandButton action="#{productController.logout()}" value="Logout #{request.userPrincipal.name}" />
+                    </h:form>
+                    <h:link styleClass="nav-link"
+                            rendered="#{request.userPrincipal == null}"
+                            value="Sign In"
+                            outcome="/login"/>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
 </ui:composition>
