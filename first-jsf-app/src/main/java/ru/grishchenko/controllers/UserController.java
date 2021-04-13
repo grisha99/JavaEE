@@ -1,11 +1,11 @@
 package ru.grishchenko.controllers;
 
-import ru.grishchenko.entity.User;
-import ru.grishchenko.repositories.UserRepository;
+import ru.grishchenko.dto.UserDto;
+import ru.grishchenko.services.UserService;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.event.ComponentSystemEvent;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 
@@ -13,45 +13,53 @@ import java.util.List;
 @ApplicationScoped
 public class UserController {
 
-    @Inject
-    private UserRepository userRepository;
+    @EJB
+    private UserService userService;
 
-    private User user;
+    private UserDto userDto;
 
-    private List<User> users;
+    private List<UserDto> users;
 
     public void preloadData(ComponentSystemEvent componentSystemEvent) {
-        users = userRepository.findAll();
+        users = userService.getAllUsers();
+//        System.out.println("preloadData UserController");
     }
 
-    public User getUser() {
-        return user;
+    public UserDto getUser() {
+        return userDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserDto userDto) {
+        this.userDto = userDto;
     }
 
-    public List<User> getUsers() {
+    public List<UserDto> getUsers() {
         return users;
     }
 
     public String createUser() {
-        this.user = new User();
-        return "/user_edit_form.xhtml?faces-redirect=true";
+        this.userDto = new UserDto();
+        return "/admin/user_edit_form.xhtml";
     }
 
-    public String editUser(User user) {
-        this.user = user;
-        return "/user_edit_form.xhtml?faces-redirect=true";
+    public String editUser(UserDto userDto) {
+        this.userDto = userDto;
+        return "/admin/user_edit_form.xhtml";
     }
 
-    public void deleteUser(User user) {
-        userRepository.deleteById(user.getId());
+    public void deleteUser(UserDto userDto) {
+        userService.deleteUserById(userDto.getId());
     }
 
     public String saveUser() {
-        userRepository.saveOrUpdate(user);
-        return "/users.xhtml?faces-redirect=true";
+        userService.saveOrUpdate(userDto);
+        return "/admin/users.xhtml";
+    }
+
+    public boolean isAdmin(String username) {
+        if (username.isEmpty()) {
+            return false;
+        }
+        return userService.isAdmin(username);
     }
 }

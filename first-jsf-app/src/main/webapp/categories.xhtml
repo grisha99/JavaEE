@@ -8,7 +8,9 @@
     <f:event listener="#{categoryController.preloadData}" type="preRenderView"></f:event>
 
     <div class="container">
-        <ui:include src="navigation.xhtml"/>
+        <ui:include src="navigation.xhtml">
+            <ui:param name="pageName" value="Category"/>
+        </ui:include>
         <div class="row py-2">
             <h:form id="productForm">
                 <div class="col-12">

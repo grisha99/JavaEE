@@ -62,6 +62,16 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
     }
 
     @Override
+    public List<ProductDto> findByName(String name) {
+        return productRepository.findByName(name).stream().map(this::createProductDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDto> findByCategoryId(Long id) {
+        return productRepository.findProductByCategoryId(id).stream().map(this::createProductDto).collect(Collectors.toList());
+    }
+
+    @Override
     public void insert(ProductDto productDto) {
         if (productDto.getId() != null) {
             throw new IllegalArgumentException();
@@ -91,5 +101,17 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
     @TransactionAttribute
     public void deleteById(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public ProductDto createProductDto(Product product) {
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getId());
+        productDto.setName(product.getName());
+        productDto.setDescription(product.getDescription());
+        productDto.setPrice(product.getPrice());
+        Category category = product.getCategory();
+        productDto.setCategoryId(category != null ? category.getId() : null);
+        productDto.setCategoryName(category != null ? category.getTitle() : null);
+        return productDto;
     }
 }

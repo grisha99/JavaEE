@@ -1,6 +1,6 @@
 package ru.grishchenko.entity;
 
-public class User {
+public class UserWeb {
 
     private Long id;
     private String alias;
@@ -8,10 +8,10 @@ public class User {
     private String password;
     private String email;
 
-    public User() {
+    public UserWeb() {
     }
 
-    public User(Long id, String alias, String username, String password, String email) {
+    public UserWeb(Long id, String alias, String username, String password, String email) {
         this.id = id;
         this.alias = alias;
         this.username = username;

@@ -4,19 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.grishchenko.entity.User;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.SystemException;
-import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Named
-@ApplicationScoped
+//@Named
+//@ApplicationScoped
+@Stateless
 public class UserRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(UserRepository.class);
@@ -24,29 +23,40 @@ public class UserRepository {
     @PersistenceContext(unitName = "ds")
     private EntityManager entityManager;
 
-    @Resource
-    private UserTransaction userTransaction;
+//    @Resource
+//    private UserTransaction userTransaction;
 
-    @PostConstruct
-    public void init() throws SystemException {
-        if (getUsersCount() == 0) {
-         try {
-             userTransaction.begin();
-
-             saveOrUpdate(new User(null, "John Dow", "john", "123", "john@mail.com"));
-             saveOrUpdate(new User(null, "Bob Johnson", "bob", "123", "bob@mail.com"));
-             saveOrUpdate(new User(null, "Dmitri Ivanov", "dima", "123", "dima@mail.com"));
-
-             userTransaction.commit();
-         } catch (Exception e) {
-             logger.error("", e);
-             userTransaction.rollback();
-         }
-        }
-    }
+//    @PostConstruct
+//    public void init() throws SystemException {
+//        if (getUsersCount() == 0) {
+//         try {
+//             userTransaction.begin();
+//
+//             saveOrUpdate(new User(null, "John Dow", "john", "123", "john@mail.com"));
+//             saveOrUpdate(new User(null, "Bob Johnson", "bob", "123", "bob@mail.com"));
+//             saveOrUpdate(new User(null, "Dmitri Ivanov", "dima", "123", "dima@mail.com"));
+//
+//             userTransaction.commit();
+//         } catch (Exception e) {
+//             logger.error("", e);
+//             userTransaction.rollback();
+//         }
+//        }
+//    }
 
     public List<User> findAll() {
-        return entityManager.createNamedQuery("User.findAll", User.class).getResultList();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> from = query.from(User.class);
+        from.fetch("roles", JoinType.LEFT);
+        query.select(from).distinct(true);
+        List<User> tmp = entityManager.createQuery(query).getResultList();
+        return tmp;
+
+//        return em.createQuery("select distinct u from User u left join fetch u.roles", User.class)
+//                .getResultList();
+//        return entityManager.createNamedQuery("User.findAll", User.class).getResultList();
     }
 
     public Long getUsersCount() {
@@ -57,17 +67,24 @@ public class UserRepository {
         return entityManager.find(User.class, id);
     }
 
-    @Transactional
-    public void saveOrUpdate(User user) {
-        if (user.getId() == null) {
-            entityManager.persist(user);
-        }
-        entityManager.merge(user);
+    public boolean existsById(Long id) {
+        return findById(id) != null;
     }
 
-    @Transactional
+    public User saveOrUpdate(User user) {
+        if (user.getId() == null) {
+            entityManager.persist(user);
+            return user;
+        }
+        return entityManager.merge(user);
+    }
+
     public void deleteById(Long id) {
-        entityManager.createNamedQuery("User.deleteById", User.class).setParameter("id", id).executeUpdate();
+        entityManager.createNamedQuery("User.deleteById").setParameter("id", id).executeUpdate();
+    }
+
+    public User getUserByUsername(String username) {
+        return entityManager.createNamedQuery("User.getByName", User.class).setParameter("username", username).getSingleResult();
     }
 
 }

@@ -53,31 +53,31 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="user" items="${requestScope.users}">
+                <c:forEach var="userWeb" items="${requestScope.users}">
                     <%--                <% for (Product product : (List<Product>) request.getAttribute("products")) { %>--%>
                     <tr>
                         <th scope="row">
-                            <c:out value="${user.id}"/>
+                            <c:out value="${userWeb.id}"/>
                                 <%--                        <%= product.getId() %>--%>
                         </th>
                         <td>
-                            <c:out value="${user.alias}"/>
+                            <c:out value="${userWeb.alias}"/>
                                 <%--                        <%= product.getName() %>--%>
                         </td>
                         <td>
-                            <c:out value="${user.username}"/>
+                            <c:out value="${userWeb.username}"/>
                                 <%--                        <%= product.getDescription() %>--%>
                         </td>
                         <td>
-                            <c:out value="${user.email}"/>
+                            <c:out value="${userWeb.email}"/>
                                 <%--                        <%= product.getPrice() %>--%>
                         </td>
                         <td>
                             <c:url value="/users/edit" var="userEditUrl">
-                                <c:param name="id" value="${user.id}"/>
+                                <c:param name="id" value="${userWeb.id}"/>
                             </c:url>
                             <c:url value="/users/delete" var="userDelUrl">
-                                <c:param name="id" value="${user.id}"/>
+                                <c:param name="id" value="${userWeb.id}"/>
                             </c:url>
                             <a class="btn btn-success" href="${userEditUrl}"><i class="fas fa-edit"></i></a>
                             <a class="btn btn-danger" href="${userDelUrl}"><i class="far fa-trash-alt"></i></a>

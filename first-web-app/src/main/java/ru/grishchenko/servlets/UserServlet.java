@@ -2,7 +2,7 @@ package ru.grishchenko.servlets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.grishchenko.entity.User;
+import ru.grishchenko.entity.UserWeb;
 import ru.grishchenko.repositories.UserRepository;
 
 import javax.servlet.ServletException;
@@ -46,17 +46,17 @@ public class UserServlet extends HttpServlet {
                 logger.info(ex.getMessage());
                 return;
             }
-            User user = userRepository.findById(id);
-            if (user == null) {
+            UserWeb userWeb = userRepository.findById(id);
+            if (userWeb == null) {
 //                resp.setStatus(404);
                 resp.sendError(404);
                 return;
             }
-            req.setAttribute("user", user);
+            req.setAttribute("user", userWeb);
             getServletContext().getRequestDispatcher("/WEB-INF/user_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/add")) {
-            User user = new User();
-            req.setAttribute("user", user);
+            UserWeb userWeb = new UserWeb();
+            req.setAttribute("user", userWeb);
             getServletContext().getRequestDispatcher("/WEB-INF/user_edit_form.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/delete")) {
             long id;
@@ -88,8 +88,8 @@ public class UserServlet extends HttpServlet {
                 return;
             }
         }
-        User user = new User(id, req.getParameter("alias"), req.getParameter("username"), req.getParameter("password"), req.getParameter("email"));
-        userRepository.saveOrUpdate(user);
+        UserWeb userWeb = new UserWeb(id, req.getParameter("alias"), req.getParameter("username"), req.getParameter("password"), req.getParameter("email"));
+        userRepository.saveOrUpdate(userWeb);
         resp.sendRedirect(getServletContext().getContextPath() + "/users");
     }
 }
